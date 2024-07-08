@@ -172,3 +172,7 @@ print("A list of vehicles: " + str(listTransport))
 listNumbers = [5, 7, 9, 11, 13]
 print("Some odd numbers: " + str(listNumbers))
 </script></div>
+
+</div>
+</body>
+</html>
