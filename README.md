@@ -1,4 +1,8 @@
-
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8">
+  
 <ul>
   <li> عنصر في قائمة غير مرتبة.
     <ul>
