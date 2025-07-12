@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Devil's Curve with JSXGraph</title>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css" />
+  <style>
+    html, body { margin: 0; padding: 0; }
+    #box { width: 600px; height: 600px; margin: 20px auto; border: 1px solid gray; }
+  </style>
+</head>
+<body>
+  <div id="box"></div>
+
+  <script type="text/javascript">
+    const board = JXG.JSXGraph.initBoard('box', {
+      boundingbox: [-5, 5, 5, -5],
+      axis: true
+    });
+
+ var a = board.create('slider', [
+    [-2, 4.3], [2, 4.3], [0, 1.5, 3]
+], {
+    name: 'a'
+});
+var b = board.create('slider', [
+    [-2, 3.8], [2, 3.8], [0, 2, 3]
+], {
+    name: 'b'
+});
+ 
+var c = board.create('curve', [
+  (theta) => Math.sqrt( (b.Value()**2 * Math.sin(theta)**2 - a.Value()**2 * Math.cos(theta)**2 ) /
+                 (Math.sin(theta)**2 - Math.cos(theta)**2 ) ),
+    [0, 0],
+    0, 2 * Math.PI
+], {
+    strokeWidth: 3,
+    curveType: 'polar'
+
+});
+
+
+  </script>
+</body>
+</html>
