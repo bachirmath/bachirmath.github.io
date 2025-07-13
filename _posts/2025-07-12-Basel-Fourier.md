@@ -70,7 +70,7 @@ x^2=\frac{\pi^2}{3}+\sum_{n=1}^{\infty}\frac{4(-1)^n}{n^2}\cos(nx)
 
 
 $$
-\cos(n\pi)=(-1)^{n}
+\cos(n\pi)=(-1)^{n}, \quad \forall n\geq 0.
 $$
 
 
