@@ -64,7 +64,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>تقريب سلسلة فورير</h2>
+        <h2>تقريب سلسلة فورير - المجال [-π, π]</h2>
         
         <div class="controls">
             <div class="slider-container">
@@ -105,12 +105,16 @@
             ctx.strokeStyle = '#e0e0e0';
             ctx.lineWidth = 0.5;
             
-            // Vertical grid lines
-            for (let i = 90; i <= 630; i += 135) {
-                ctx.beginPath();
-                ctx.moveTo(i, 60);
-                ctx.lineTo(i, 300);
-                ctx.stroke();
+            // Vertical grid lines at multiples of π/2
+            const piScale = 85.5; // pixels per π unit
+            for (let i = -2; i <= 2; i++) {
+                const x = 360 + i * piScale;
+                if (x >= 90 && x <= 630) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 60);
+                    ctx.lineTo(x, 300);
+                    ctx.stroke();
+                }
             }
             
             // Horizontal grid lines
@@ -142,12 +146,12 @@
             ctx.font = '12px Arial';
             ctx.textAlign = 'center';
             
-            // X-axis labels
-            ctx.fillText('-2', 105, 256);
-            ctx.fillText('-1', 225, 256);
+            // X-axis labels (multiples of π)
+            ctx.fillText('-2π', 189, 256);
+            ctx.fillText('-π', 274.5, 256);
             ctx.fillText('0', 360, 256);
-            ctx.fillText('1', 495, 256);
-            ctx.fillText('2', 615, 256);
+            ctx.fillText('π', 445.5, 256);
+            ctx.fillText('2π', 531, 256);
             
             // Y-axis labels
             ctx.textAlign = 'right';
@@ -159,18 +163,18 @@
         }
 
         function originalFunction(x) {
-            // Period is 2, so map x to [-1, 1] interval
-            let xMod = ((x % 2) + 2) % 2;
-            if (xMod > 1) xMod -= 2;
+            // Period is 2π, so map x to [-π, π] interval
+            let xMod = ((x % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI);
+            if (xMod > Math.PI) xMod -= 2 * Math.PI;
             
-            // f(x) = 0 for -1 < x <= 0, f(x) = 1 for 0 < x <= 1
-            return (xMod > 0 && xMod <= 1) ? 1 : 0;
+            // f(x) = 0 for -π < x <= 0, f(x) = 1 for 0 < x <= π
+            return (xMod > 0 && xMod <= Math.PI) ? 1 : 0;
         }
 
         function fourierSum(x, m) {
             let sum = 0.5; // a0/2 = 1/2
             for (let n = 1; n <= m; n += 2) {
-                sum += (2 / (n * Math.PI)) * Math.sin(n * Math.PI * x);
+                sum += (2 / (n * Math.PI)) * Math.sin(n * x);
             }
             return sum;
         }
@@ -187,7 +191,7 @@
             
             let first = true;
             for (let px = 90; px <= 630; px += 1) {
-                const x = ((px - 360) / 135); // Scale: 135px = 1 unit
+                const x = ((px - 360) / 85.5) * Math.PI; // Scale: 85.5px = π units
                 const y = originalFunction(x);
                 const py = 238.4 - y * 120; // y=0 at 238.4, scale: 120px = 1 unit
                 
@@ -207,7 +211,7 @@
             
             first = true;
             for (let px = 90; px <= 630; px += 1) {
-                const x = ((px - 360) / 135);
+                const x = ((px - 360) / 85.5) * Math.PI;
                 const y = fourierSum(x, m);
                 const py = 238.4 - y * 120; // y=0 at 238.4
                 
