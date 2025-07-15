@@ -35,5 +35,5 @@ $$
 
 ## المراجع
 
-1. [Harry Dym, "Weierstrass's non-differentiable function", American Mathematical Society Transactions](https://www.ams.org/journals/tran/1972-169-00/S0002-9947-1972-0309756-9/)
+1. [Harry Dym, "Weierstrass's non-differentiable function", American Mathematical Society Transactions](https://www.ams.org/journals/tran/1916-017-03/S0002-9947-1916-1501044-1/S0002-9947-1916-1501044-1.pdf)
 2. [Julian Havil, "Curves for the Mathematically Curious: An Anthology of the Unpredictable, Historical, Beautiful, and Romantic", Princeton University Press, 2019](https://press.princeton.edu/books/hardcover/9780691180052/curves-for-the-mathematically-curious)
