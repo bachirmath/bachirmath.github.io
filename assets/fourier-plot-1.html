@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سلاسل فورير - f(x) = x</title>
+    <style>
+        body { 
+            font-family: 'Arial', 'Tahoma', sans-serif; 
+            margin: 0;
+            padding: 10px;
+            text-align: center;
+            direction: rtl;
+            background-color: white;
+            overflow: hidden;
+        }
+        .container {
+            width: 100%;
+            height: 100%;
+            background: white;
+            padding: 0;
+            margin: 0;
+        }
+        canvas { 
+            border: 1px solid #ddd; 
+            margin: 5px 0;
+            border-radius: 3px;
+            background: white;
+            display: block;
+        }
+        .controls {
+            margin: 10px 0;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 3px;
+        }
+        .slider-container {
+            margin: 5px 0;
+        }
+        input[type="range"] {
+            width: 200px;
+            margin: 5px;
+        }
+        h2 {
+            color: #333;
+            margin: 5px 0 10px 0;
+            font-size: 18px;
+        }
+        .value-display {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+        .legend {
+            text-align: right;
+            margin: 5px;
+            font-size: 12px;
+        }
+        .function-display {
+            font-size: 14px;
+            color: #333;
+            margin: 5px 0;
+            direction: ltr;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>تقريب سلسلة فورير للدالة f(x) = x</h2>
+        
+        <div class="controls">
+            <div class="slider-container">
+                <label>عدد الحدود: <span id="value" class="value-display">5</span></label><br>
+                <input type="range" id="slider" min="1" max="20" value="5">
+            </div>
+            <div class="function-display" id="function-display">
+                S₅(x) = 2(sin(x) - sin(2x)/2 + sin(3x)/3 - sin(4x)/4 + sin(5x)/5)
+            </div>
+        </div>
+        
+        <canvas id="canvas" width="720" height="400"></canvas>
+        
+        <div class="legend">
+            <div style="margin: 5px 0;">
+                <span style="display: inline-block; width: 20px; height: 3px; background: #ff0000; margin-left: 10px;"></span>
+                الدالة الأصلية f(x) = x
+            </div>
+            <div style="margin: 5px 0;">
+                <span style="display: inline-block; width: 20px; height: 3px; background: #0066cc; margin-left: 10px;"></span>
+                <span id="legend-text">تقريب فورير (m=5)</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const slider = document.getElementById('slider');
+        const valueSpan = document.getElementById('value');
+        const legendText = document.getElementById('legend-text');
+        const functionDisplay = document.getElementById('function-display');
+
+        function drawAxes() {
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Grid lines
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 0.5;
+            
+            // Vertical grid lines at multiples of π/2
+            const piScale = 85.5; // pixels per π unit
+            for (let i = -2; i <= 2; i++) {
+                const x = 360 + i * piScale;
+                if (x >= 90 && x <= 630) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 80);
+                    ctx.lineTo(x, 320);
+                    ctx.stroke();
+                }
+            }
+            
+            // Horizontal grid lines
+            for (let i = 80; i <= 320; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(90, i);
+                ctx.lineTo(630, i);
+                ctx.stroke();
+            }
+            
+            // Main axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            
+            // X axis (y=0 line)
+            ctx.beginPath();
+            ctx.moveTo(90, 200);
+            ctx.lineTo(630, 200);
+            ctx.stroke();
+            
+            // Y axis
+            ctx.beginPath();
+            ctx.moveTo(360, 80);
+            ctx.lineTo(360, 320);
+            ctx.stroke();
+            
+            // Axis labels
+            ctx.fillStyle = '#333';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            
+            // X-axis labels (multiples of π)
+            ctx.fillText('-2π', 189, 218);
+            ctx.fillText('-π', 274.5, 218);
+            ctx.fillText('0', 360, 218);
+            ctx.fillText('π', 445.5, 218);
+            ctx.fillText('2π', 531, 218);
+            
+            // Y-axis labels
+            ctx.textAlign = 'right';
+            ctx.fillText('π', 352, 86);
+            ctx.fillText('π/2', 352, 126);
+            ctx.fillText('0', 352, 206);
+            ctx.fillText('-π/2', 352, 286);
+            ctx.fillText('-π', 352, 326);
+        }
+
+        function originalFunction(x) {
+            // Period is 2π, so map x to [-π, π] interval
+            let xMod = ((x % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI);
+            if (xMod > Math.PI) xMod -= 2 * Math.PI;
+            
+            return xMod;
+        }
+
+        function fourierSum(x, m) {
+            let sum = 0;
+            for (let n = 1; n <= m; n++) {
+                sum += (2 * Math.pow(-1, n+1) / n) * Math.sin(n * x);
+            }
+            return sum;
+        }
+
+        function updateFunctionDisplay(m) {
+            let displayText = `S${m}(x) = 2(`;
+            let terms = [];
+            for (let n = 1; n <= Math.min(m, 8); n++) {
+                let sign = n % 2 === 1 ? '' : '-';
+                if (n === 1) {
+                    terms.push(`sin(x)`);
+                } else {
+                    terms.push(`${sign} sin(${n}x)/${n}`);
+                }
+            }
+            displayText += terms.join(' ') + (m > 8 ? ' + ...' : '') + ')';
+            functionDisplay.textContent = displayText;
+        }
+
+        function plot() {
+            drawAxes();
+            
+            const m = parseInt(slider.value);
+            
+            // Plot original function (red) - show multiple periods
+            ctx.strokeStyle = '#ff0000';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            let first = true;
+            for (let px = 90; px <= 630; px += 1) {
+                const x = ((px - 360) / 85.5) * Math.PI; // Scale: 85.5px = π units
+                const y = originalFunction(x);
+                const py = 200 - (y / Math.PI) * 120; // y=0 at 200, scale: 120px = π units
+                
+                if (first) {
+                    ctx.moveTo(px, py);
+                    first = false;
+                } else {
+                    ctx.lineTo(px, py);
+                }
+            }
+            ctx.stroke();
+            
+            // Plot Fourier approximation (blue)
+            ctx.strokeStyle = '#0066cc';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            first = true;
+            for (let px = 90; px <= 630; px += 1) {
+                const x = ((px - 360) / 85.5) * Math.PI;
+                const y = fourierSum(x, m);
+                const py = 200 - (y / Math.PI) * 120;
+                
+                if (py >= 80 && py <= 320) { // Only draw within visible bounds
+                    if (first) {
+                        ctx.moveTo(px, py);
+                        first = false;
+                    } else {
+                        ctx.lineTo(px, py);
+                    }
+                }
+            }
+            ctx.stroke();
+        }
+
+        slider.addEventListener('input', function() {
+            const value = this.value;
+            valueSpan.textContent = value;
+            legendText.textContent = `تقريب فورير (m=${value})`;
+            updateFunctionDisplay(parseInt(value));
+            plot();
+        });
+
+        // Initial setup
+        updateFunctionDisplay(5);
+        plot();
+    </script>
+</body>
+</html>
