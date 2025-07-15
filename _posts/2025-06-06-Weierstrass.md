@@ -16,7 +16,7 @@ author: Bachir
 دالة وايرستراس تُعرف بالسلسلة:
 
 $$
-W(x) = \sum_{n=0}^{\infty} a^n \cos(b^n \pi x)
+W(x) = \sum_{n=0}^{\infty} a^n \cos(b^n x)
 $$
 
 حيث $0 < a < 1$ و $b$ عدد صحيح موجب فردي.
