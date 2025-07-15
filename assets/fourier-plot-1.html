@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سلاسل فورير - f(x) = x</title>
+    <title>سلاسل فورير</title>
     <style>
         body { 
             font-family: 'Arial', 'Tahoma', sans-serif; 
@@ -46,6 +46,10 @@
             margin: 5px 0 10px 0;
             font-size: 18px;
         }
+        h3 {
+            margin: 5px 0;
+            color: #666;
+        }
         .value-display {
             font-size: 18px;
             font-weight: bold;
@@ -56,29 +60,20 @@
             margin: 5px;
             font-size: 12px;
         }
-        .function-display {
-            font-size: 14px;
-            color: #333;
-            margin: 5px 0;
-            direction: ltr;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>تقريب سلسلة فورير للدالة f(x) = x</h2>
+        <h2>تقريب سلسلة فورير - الدالة f(x) = x على المجال [π, π-]</h2>
         
         <div class="controls">
             <div class="slider-container">
                 <label>عدد الحدود: <span id="value" class="value-display">5</span></label><br>
-                <input type="range" id="slider" min="1" max="20" value="5">
-            </div>
-            <div class="function-display" id="function-display">
-                S₅(x) = 2(sin(x) - sin(2x)/2 + sin(3x)/3 - sin(4x)/4 + sin(5x)/5)
+                <input type="range" id="slider" min="1" max="50" value="5">
             </div>
         </div>
         
-        <canvas id="canvas" width="720" height="400"></canvas>
+        <canvas id="canvas" width="720" height="360"></canvas>
         
         <div class="legend">
             <div style="margin: 5px 0;">
@@ -98,7 +93,6 @@
         const slider = document.getElementById('slider');
         const valueSpan = document.getElementById('value');
         const legendText = document.getElementById('legend-text');
-        const functionDisplay = document.getElementById('function-display');
 
         function drawAxes() {
             ctx.strokeStyle = '#333';
@@ -117,14 +111,14 @@
                 const x = 360 + i * piScale;
                 if (x >= 90 && x <= 630) {
                     ctx.beginPath();
-                    ctx.moveTo(x, 80);
-                    ctx.lineTo(x, 320);
+                    ctx.moveTo(x, 60);
+                    ctx.lineTo(x, 300);
                     ctx.stroke();
                 }
             }
             
             // Horizontal grid lines
-            for (let i = 80; i <= 320; i += 40) {
+            for (let i = 90; i <= 306; i += 36) {
                 ctx.beginPath();
                 ctx.moveTo(90, i);
                 ctx.lineTo(630, i);
@@ -137,14 +131,14 @@
             
             // X axis (y=0 line)
             ctx.beginPath();
-            ctx.moveTo(90, 200);
-            ctx.lineTo(630, 200);
+            ctx.moveTo(90, 180);
+            ctx.lineTo(630, 180);
             ctx.stroke();
             
             // Y axis
             ctx.beginPath();
-            ctx.moveTo(360, 80);
-            ctx.lineTo(360, 320);
+            ctx.moveTo(360, 60);
+            ctx.lineTo(360, 300);
             ctx.stroke();
             
             // Axis labels
@@ -153,19 +147,19 @@
             ctx.textAlign = 'center';
             
             // X-axis labels (multiples of π)
-            ctx.fillText('-2π', 189, 218);
-            ctx.fillText('-π', 274.5, 218);
-            ctx.fillText('0', 360, 218);
-            ctx.fillText('π', 445.5, 218);
-            ctx.fillText('2π', 531, 218);
+            ctx.fillText('-2π', 189, 198);
+            ctx.fillText('-π', 274.5, 198);
+            ctx.fillText('0', 360, 198);
+            ctx.fillText('π', 445.5, 198);
+            ctx.fillText('2π', 531, 198);
             
             // Y-axis labels
             ctx.textAlign = 'right';
-            ctx.fillText('π', 352, 86);
-            ctx.fillText('π/2', 352, 126);
-            ctx.fillText('0', 352, 206);
-            ctx.fillText('-π/2', 352, 286);
-            ctx.fillText('-π', 352, 326);
+            ctx.fillText('π', 348, 70);
+            ctx.fillText('π/2', 348, 108);
+            ctx.fillText('0', 348, 186);
+            ctx.fillText('-π/2', 348, 258);
+            ctx.fillText('-π', 348, 294);
         }
 
         function originalFunction(x) {
@@ -173,30 +167,20 @@
             let xMod = ((x % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI);
             if (xMod > Math.PI) xMod -= 2 * Math.PI;
             
+            // f(x) = x on [-π, π]
             return xMod;
         }
 
         function fourierSum(x, m) {
-            let sum = 0;
+            let sum = 0; // a0 = 0 for odd function
+            
+            // For f(x) = x on [-π, π], the Fourier series is:
+            // f(x) = 2 * Σ(n=1 to ∞) [(-1)^(n+1) / n] * sin(nx)
             for (let n = 1; n <= m; n++) {
-                sum += (2 * Math.pow(-1, n+1) / n) * Math.sin(n * x);
+                const coefficient = 2 * Math.pow(-1, n + 1) / n;
+                sum += coefficient * Math.sin(n * x);
             }
             return sum;
-        }
-
-        function updateFunctionDisplay(m) {
-            let displayText = `S${m}(x) = 2(`;
-            let terms = [];
-            for (let n = 1; n <= Math.min(m, 8); n++) {
-                let sign = n % 2 === 1 ? '' : '-';
-                if (n === 1) {
-                    terms.push(`sin(x)`);
-                } else {
-                    terms.push(`${sign} sin(${n}x)/${n}`);
-                }
-            }
-            displayText += terms.join(' ') + (m > 8 ? ' + ...' : '') + ')';
-            functionDisplay.textContent = displayText;
         }
 
         function plot() {
@@ -204,16 +188,16 @@
             
             const m = parseInt(slider.value);
             
-            // Plot original function (red) - show multiple periods
+            // Plot original function (red)
             ctx.strokeStyle = '#ff0000';
             ctx.lineWidth = 3;
             ctx.beginPath();
             
             let first = true;
-            for (let px = 90; px <= 630; px += 1) {
+            for (let px = 90; px <= 630; px += 0.25) {
                 const x = ((px - 360) / 85.5) * Math.PI; // Scale: 85.5px = π units
                 const y = originalFunction(x);
-                const py = 200 - (y / Math.PI) * 120; // y=0 at 200, scale: 120px = π units
+                const py = 180 - y * (120 / Math.PI); // y=0 at 180, scale: 120px = π units
                 
                 if (first) {
                     ctx.moveTo(px, py);
@@ -230,18 +214,16 @@
             ctx.beginPath();
             
             first = true;
-            for (let px = 90; px <= 630; px += 1) {
+            for (let px = 90; px <= 630; px += 0.25) {
                 const x = ((px - 360) / 85.5) * Math.PI;
                 const y = fourierSum(x, m);
-                const py = 200 - (y / Math.PI) * 120;
+                const py = 180 - y * (120 / Math.PI); // y=0 at 180
                 
-                if (py >= 80 && py <= 320) { // Only draw within visible bounds
-                    if (first) {
-                        ctx.moveTo(px, py);
-                        first = false;
-                    } else {
-                        ctx.lineTo(px, py);
-                    }
+                if (first) {
+                    ctx.moveTo(px, py);
+                    first = false;
+                } else {
+                    ctx.lineTo(px, py);
                 }
             }
             ctx.stroke();
@@ -251,12 +233,17 @@
             const value = this.value;
             valueSpan.textContent = value;
             legendText.textContent = `تقريب فورير (m=${value})`;
-            updateFunctionDisplay(parseInt(value));
             plot();
         });
 
-        // Initial setup
-        updateFunctionDisplay(5);
+        // Handle canvas resize
+        function resizeCanvas() {
+            // Remove resize functionality for iframe
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Initial plot
         plot();
     </script>
 </body>
