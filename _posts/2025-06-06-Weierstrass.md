@@ -31,6 +31,10 @@ $$
 
 هذه النتيجة حسّنت الشرط الأصلي لوايرستراس وقدمت برهاناً أكثر أناقة ودقة.
 
+## شرح بالفيديو
+
+<iframe width="560" height="315" src="https://www.youtube.com/watch?v=hniwvk4zcNg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ---
 
 ## المراجع
