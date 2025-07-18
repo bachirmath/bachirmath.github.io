@@ -10,18 +10,19 @@ tag: تحليل
 
 نظرية لايبنيتز للإشتقاق تحت رمز المكاملة تقول أنه إذا كانت هناك دالة \\(f(x,t)\\) من الصنف $$\mathcal{C}^1$$ ،أي أن $$f_t,f_x,f$$ مستمرة، <strong>  فإن</strong>
 
-\begin{equation}
+$$
 \frac{d}{dt} \int_a^b f(x, t)dx = \int_a^b \frac{\partial f(x, t)}{\partial t}dx
-\end{equation}
+$$
 
 
 
 ### مثال 1:
 
 لنعتبر التكامل التالي 
-\begin{equation}
+
+$$
  \int_{0}^{1} \frac{\ln(x+1)}{x^2+1}dx
-\end{equation}
+$$
 
 <br>
 
@@ -49,9 +50,10 @@ tag: تحليل
 
 لنعتبر مثلا تكامل غوس، و هو أحد أهم التكاملات و الذي له تطبيقات في شتى فروع الرياضيات
 
-\begin{equation}
+
+$$
  \int_{0}^{+\infty} e^{-x^2}dx
-\end{equation}
+$$
 
 <br>
 
