@@ -12,14 +12,15 @@
             text-align: center;
             direction: rtl;
             background-color: white;
-            overflow: hidden;
+            box-sizing: border-box;
         }
         .container {
             width: 100%;
-            height: 100%;
+            max-width: 900px;
+            margin: 0 auto;
             background: white;
             padding: 0;
-            margin: 0;
+            box-sizing: border-box;
         }
         canvas { 
             border: 1px solid #ddd; 
@@ -27,6 +28,9 @@
             border-radius: 3px;
             background: white;
             display: block;
+            width: 100%;
+            height: auto;
+            max-width: 100%;
         }
         .controls {
             margin: 10px 0;
@@ -38,27 +42,52 @@
             margin: 5px 0;
         }
         input[type="range"] {
-            width: 200px;
+            width: min(300px, 80%);
             margin: 5px;
         }
         h2 {
             color: #333;
             margin: 5px 0 10px 0;
-            font-size: 18px;
+            font-size: clamp(16px, 3vw, 20px);
         }
         h3 {
             margin: 5px 0;
             color: #666;
         }
         .value-display {
-            font-size: 18px;
+            font-size: clamp(16px, 3vw, 20px);
             font-weight: bold;
             color: #0066cc;
         }
         .legend {
             text-align: right;
             margin: 5px;
-            font-size: 12px;
+            font-size: clamp(10px, 2vw, 14px);
+        }
+        .legend-item {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .legend-color {
+            display: inline-block;
+            width: 20px;
+            height: 3px;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 5px;
+            }
+            .controls {
+                padding: 5px;
+            }
+            input[type="range"] {
+                width: 90%;
+            }
         }
     </style>
 </head>
@@ -73,16 +102,16 @@
             </div>
         </div>
         
-        <canvas id="canvas" width="720" height="360"></canvas>
+        <canvas id="canvas"></canvas>
         
         <div class="legend">
-            <div style="margin: 5px 0;">
-                <span style="display: inline-block; width: 20px; height: 3px; background: #ff0000; margin-left: 10px;"></span>
-                الدالة الأصلية
+            <div class="legend-item">
+                <span>الدالة الأصلية</span>
+                <span class="legend-color" style="background: #ff0000;"></span>
             </div>
-            <div style="margin: 5px 0;">
-                <span style="display: inline-block; width: 20px; height: 3px; background: #0066cc; margin-left: 10px;"></span>
+            <div class="legend-item">
                 <span id="legend-text">تقريب فورير (m=5)</span>
+                <span class="legend-color" style="background: #0066cc;"></span>
             </div>
         </div>
     </div>
@@ -94,72 +123,147 @@
         const valueSpan = document.getElementById('value');
         const legendText = document.getElementById('legend-text');
 
+        let canvasWidth, canvasHeight;
+        let centerX, centerY;
+        let piScale, yScale;
+        let plotLeft, plotRight, plotTop, plotBottom;
+
+        function resizeCanvas() {
+            const container = document.querySelector('.container');
+            const containerWidth = container.offsetWidth;
+            
+            // Calculate responsive dimensions
+            canvasWidth = Math.min(containerWidth - 20, 800);
+            canvasHeight = Math.max(canvasWidth * 0.5, 300);
+            
+            // Set canvas size
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            
+            // Calculate plot area with proper margins
+            plotLeft = canvasWidth * 0.12;
+            plotRight = canvasWidth * 0.95;
+            plotTop = canvasHeight * 0.1;
+            plotBottom = canvasHeight * 0.85;
+            
+            centerX = (plotLeft + plotRight) / 2;
+            centerY = plotTop + (plotBottom - plotTop) * 0.7; // Position for y=0
+            
+            // Scale factors - this is the key fix!
+            piScale = (plotRight - plotLeft) / 4; // Each π unit gets 1/4 of the total width
+            yScale = (centerY - plotTop) / 1.8; // Scale for y values up to 1.8
+            
+            plot();
+        }
+
         function drawAxes() {
             ctx.strokeStyle = '#333';
             ctx.lineWidth = 1;
             
             // Clear canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
             
-            // Grid lines
-            ctx.strokeStyle = '#e0e0e0';
+            // Light grid lines
+            ctx.strokeStyle = '#f0f0f0';
             ctx.lineWidth = 0.5;
             
-            // Vertical grid lines at multiples of π/2
-            const piScale = 85.5; // pixels per π unit
+            // Vertical grid lines at π intervals
             for (let i = -2; i <= 2; i++) {
-                const x = 360 + i * piScale;
-                if (x >= 90 && x <= 630) {
+                if (i === 0) continue; // Skip center line
+                const x = centerX + i * piScale;
+                if (x >= plotLeft && x <= plotRight) {
                     ctx.beginPath();
-                    ctx.moveTo(x, 60);
-                    ctx.lineTo(x, 300);
+                    ctx.moveTo(x, plotTop);
+                    ctx.lineTo(x, plotBottom);
                     ctx.stroke();
                 }
             }
             
             // Horizontal grid lines
-            for (let i = 90; i <= 306; i += 36) {
-                ctx.beginPath();
-                ctx.moveTo(90, i);
-                ctx.lineTo(630, i);
-                ctx.stroke();
-            }
+            const yGridValues = [0.5, 1.0, 1.5];
+            yGridValues.forEach(val => {
+                const y = centerY - val * yScale;
+                if (y >= plotTop && y <= plotBottom) {
+                    ctx.beginPath();
+                    ctx.moveTo(plotLeft, y);
+                    ctx.lineTo(plotRight, y);
+                    ctx.stroke();
+                }
+            });
             
             // Main axes
             ctx.strokeStyle = '#333';
             ctx.lineWidth = 2;
             
             // X axis (y=0 line)
+            const xAxisY = centerY;
             ctx.beginPath();
-            ctx.moveTo(90, 238.4);
-            ctx.lineTo(630, 238.4);
+            ctx.moveTo(plotLeft, xAxisY);
+            ctx.lineTo(plotRight, xAxisY);
             ctx.stroke();
             
-            // Y axis
+            // Y axis (x=0 line)
             ctx.beginPath();
-            ctx.moveTo(360, 90);
-            ctx.lineTo(360, 306);
+            ctx.moveTo(centerX, plotTop);
+            ctx.lineTo(centerX, plotBottom);
             ctx.stroke();
             
-            // Axis labels
+            // Tick marks and labels
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
             ctx.fillStyle = '#333';
-            ctx.font = '12px Arial';
-            ctx.textAlign = 'center';
             
-            // X-axis labels (multiples of π)
-            ctx.fillText('-2π', 189, 256);
-            ctx.fillText('-π', 274.5, 256);
-            ctx.fillText('0', 360, 256);
-            ctx.fillText('π', 445.5, 256);
-            ctx.fillText('2π', 531, 256);
+            const fontSize = Math.max(10, Math.min(14, canvasWidth * 0.018));
+            ctx.font = `${fontSize}px Arial`;
             
-            // Y-axis labels
-            ctx.textAlign = 'right';
-            ctx.fillText('1.4', 348, 96);
-            ctx.fillText('1.0', 348, 126.4);
-            ctx.fillText('0.5', 348, 156);
-            ctx.fillText('0', 348, 244);
-            ctx.fillText('-0.4', 348, 310);
+            // X-axis ticks and labels
+            const xLabels = [
+                { value: -2, text: '-2π' },
+                { value: -1, text: '-π' },
+                { value: 0, text: '0' },
+                { value: 1, text: 'π' },
+                { value: 2, text: '2π' }
+            ];
+            
+            xLabels.forEach(label => {
+                const x = centerX + label.value * piScale;
+                if (x >= plotLeft && x <= plotRight) {
+                    // Tick mark
+                    ctx.beginPath();
+                    ctx.moveTo(x, xAxisY - 5);
+                    ctx.lineTo(x, xAxisY + 5);
+                    ctx.stroke();
+                    
+                    // Label
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(label.text, x, xAxisY + 8);
+                }
+            });
+            
+            // Y-axis ticks and labels
+            const yLabels = [
+                { value: 0, text: '0' },
+                { value: 0.5, text: '0.5' },
+                { value: 1.0, text: '1.0' },
+                { value: 1.5, text: '1.5' }
+            ];
+            
+            yLabels.forEach(label => {
+                const y = centerY - label.value * yScale;
+                if (y >= plotTop && y <= plotBottom && label.value !== 0) {
+                    // Tick mark
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 5, y);
+                    ctx.lineTo(centerX + 5, y);
+                    ctx.stroke();
+                    
+                    // Label
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(label.text, centerX - 8, y);
+                }
+            });
         }
 
         function originalFunction(x) {
@@ -186,14 +290,14 @@
             
             // Plot original function (red)
             ctx.strokeStyle = '#ff0000';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = Math.max(2, canvasWidth * 0.004);
             ctx.beginPath();
             
             let first = true;
-            for (let px = 90; px <= 630; px += 1) {
-                const x = ((px - 360) / 85.5) * Math.PI; // Scale: 85.5px = π units
+            for (let px = plotLeft; px <= plotRight; px += 1) {
+                const x = ((px - centerX) / piScale) * Math.PI; // Convert pixel to actual x value
                 const y = originalFunction(x);
-                const py = 238.4 - y * 120; // y=0 at 238.4, scale: 120px = 1 unit
+                const py = centerY - y * yScale; // Convert y value to pixel
                 
                 if (first) {
                     ctx.moveTo(px, py);
@@ -206,16 +310,16 @@
             
             // Plot Fourier approximation (blue)
             ctx.strokeStyle = '#0066cc';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = Math.max(1.5, canvasWidth * 0.003);
             ctx.beginPath();
             
             first = true;
-            for (let px = 90; px <= 630; px += 1) {
-                const x = ((px - 360) / 85.5) * Math.PI;
+            for (let px = plotLeft; px <= plotRight; px += 1) {
+                const x = ((px - centerX) / piScale) * Math.PI; // Convert pixel to actual x value
                 const y = fourierSum(x, m);
-                const py = 238.4 - y * 120; // y=0 at 238.4
+                const py = centerY - y * yScale;
                 
-                if (py >= 90 && py <= 306) { // Only draw within visible bounds
+                if (py >= plotTop && py <= plotBottom) { // Only draw within visible bounds
                     if (first) {
                         ctx.moveTo(px, py);
                         first = false;
@@ -234,15 +338,11 @@
             plot();
         });
 
-        // Handle canvas resize
-        function resizeCanvas() {
-            // Remove resize functionality for iframe
-        }
-
+        // Handle window resize
         window.addEventListener('resize', resizeCanvas);
         
-        // Initial plot
-        plot();
+        // Initial setup
+        resizeCanvas();
     </script>
 </body>
 </html>
