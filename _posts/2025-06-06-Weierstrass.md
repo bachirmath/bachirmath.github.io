@@ -50,3 +50,14 @@ $$
 
 1. [Harry Dym, "Weierstrass's non-differentiable function", American Mathematical Society Transactions](https://www.ams.org/journals/tran/1916-017-03/S0002-9947-1916-1501044-1/S0002-9947-1916-1501044-1.pdf)
 2. [Julian Havil, "Curves for the Mathematically Curious: An Anthology of the Unpredictable, Historical, Beautiful, and Romantic", Princeton University Press, 2019](https://drive.google.com/file/d/1sgsw9ZtfSBYghIyi75tqaiVz7GckV0zz/view?usp=sharing)
+
+
+<div id="comments">
+  <script src="https://utteranc.es/client.js"
+          repo="bachirmath/bachirmath.github.io"
+          issue-term="pathname"
+          theme="github-dark-orange"
+          crossorigin="anonymous"
+          async>
+  </script>
+</div>
