@@ -82,6 +82,8 @@ $$rB_0^2 - 3r \cdot \frac{2}{3} B_0^2 = -rB_0^2 < 0$$
 ---
 ## المراجع
 1. [N.J. MacKay, "Lanchester combat models", arXiv:math/0606300v1 [math.HO] 13 Jun 2006](https://arxiv.org/pdf/math/0606300.pdf)
+2. [Martin Braun, Courtney S. Coleman, Donald A. Drew, Differential Equation Models Modules in Applied Mathematics](https://drive.google.com/file/d/131tpyCop84eXkNR45qFJxytp4Y6arzAP/view?usp=sharing) 
+
 
 
 <div id="comments">
