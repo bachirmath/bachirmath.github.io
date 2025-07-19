@@ -57,23 +57,10 @@ $$
   </iframe>
 </div>
 
-## التطورات الحديثة
-تم تطوير نموذج لانشستر الأصلي ليشمل:
-- **القتال غير المتماثل**: نمذجة الحروب ضد القوات غير النظامية
-- **النماذج العشوائية**: إدخال عناصر العشوائية في القتال
-- **القتال متعدد الأطراف**: نمذجة صراعات أكثر من قوتين
-
-## الأثر على النظرية العسكرية
-نموذج لانشستر أثّر بعمق على:
-- **التخطيط العسكري**: فهم أهمية التركيز والتنسيق
-- **تطوير الأسلحة**: التركيز على تحسين الفعالية
-- **نظرية الألعاب**: تطبيقات في الاستراتيجية والتكتيك
-
 ---
 ## المراجع
 1. [N.J. MacKay, "Lanchester combat models", arXiv:math/0606300v1 [math.HO] 13 Jun 2006](https://arxiv.org/pdf/math/0606300.pdf)
-2. [Frederick W. Lanchester, "Aircraft in Warfare: The Dawn of the Fourth Arm", Constable and Company Ltd, London, 1916]
-3. [Alan Washburn, "Lanchester Systems", Naval Postgraduate School Notes]
+
 
 <div id="comments">
   <script src="https://utteranc.es/client.js"
