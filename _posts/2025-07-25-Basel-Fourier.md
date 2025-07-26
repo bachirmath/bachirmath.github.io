@@ -1,6 +1,6 @@
 ---
 layout: post
-title: تطبيق متسلسلة فورييه لحل مسألة بازل
+title:  مسألة بازل
 tag: تحليل
 author: Bachir
 ---
