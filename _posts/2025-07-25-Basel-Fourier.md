@@ -53,17 +53,17 @@ $$
 بجمع المعاملات نحصل على :
 
 
-\begin{equation*}
-\label{1}
-x^2=\frac{\pi^2}{3}+\sum_{n=1}^{\infty}\frac{4(-1)^n}{n^2}\cos(nx)
-\end{equation*}
-
+$$
+x^2\sim\frac{\pi^2}{3}+\sum_{n=1}^{\infty}\frac{4(-1)^n}{n^2}\cos(nx)
+$$
 
 
 شروط التقارب متحققة في كل نقطة، يمكن إستعمال النظرية في الصفحة 75 من كتاب Tolstov  ، وهذا يعني أن
 
+
 \begin{equation}
-x^2\sim\frac{\pi^2}{3}+\sum_{n=1}^{\infty}\frac{4(-1)^n}{n^2}\cos(nx)
+\label{1}
+x^2=\frac{\pi^2}{3}+\sum_{n=1}^{\infty}\frac{4(-1)^n}{n^2}\cos(nx)
 \end{equation}
 
 <br>
