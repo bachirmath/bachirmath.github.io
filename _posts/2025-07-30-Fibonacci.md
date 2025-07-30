@@ -19,8 +19,8 @@ author: Bachir
 
 $$
 \begin{cases}
-F_{n+2} = F_{n+1} + F_{n}, \quad  n \geq 0\\ \\
-F_0 = 0, \quad F_1 = 1
+F_{n+2} = F_{n+1} + F_{n}, \quad  n \geq 1\\ \\
+F_1 = 1, \quad F_2 = 1
 \end{cases}
 $$
 
@@ -37,13 +37,13 @@ $$\lim_{n \to \infty} \frac{F_{n+1}}{F_n} = \phi = \frac{1 + \sqrt{5}}{2} \appro
 ### صيغة بينيه (Binet's Formula)
 يمكن حساب الحد النوني مباشرة دون الحاجة للحدود السابقة:
 
-$$F_n = \frac{\phi^{n+1} - (1-\phi)^{n+1}}{\sqrt{5}}$$
+$$F_n = \frac{\phi^{n} - (1-\phi)^{n}}{\sqrt{5}}$$
 
 <div class="sage">
   <script type="text/x-sage">
 def F(n):
     phi = (1 + sqrt(5)) / 2
-    Fn = (phi^(n+1) - (1 - phi)^(n+1)) / sqrt(5)
+    Fn = (phi^(n) - (1 - phi)^(n)) / sqrt(5)
     return round(Fn)
 # مثال: نحسب F(6)
 print(F(6))  # الناتج يجب أن يكون 13
