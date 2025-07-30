@@ -37,7 +37,7 @@ $$\lim_{n \to \infty} \frac{F_{n+1}}{F_n} = \phi = \frac{1 + \sqrt{5}}{2} \appro
 ### صيغة بينيه (Binet's Formula)
 يمكن حساب الحد النوني مباشرة دون الحاجة للحدود السابقة:
 
-$$F_n = \frac{\phi^{n} - (1-\phi)^{n}}{\sqrt{5}}$$
+$$\boxed{F_n = \frac{\phi^{n} - (1-\phi)^{n}}{\sqrt{5}}}$$
 
 <div class="sage">
   <script type="text/x-sage">
