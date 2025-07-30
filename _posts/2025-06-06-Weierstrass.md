@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "دالة  فايرشتراس (Weierstrass Function)"
+title: "دالة  فايرشتراس "
 description: "دالة مستمرة في كل نقطة لكنها غير قابلة للاشتقاق في أي نقطة"
 tag: تحليل
 author: Bachir
