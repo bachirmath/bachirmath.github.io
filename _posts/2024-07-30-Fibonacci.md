@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "متتالية فيبوناتشي (Fibonacci Sequence)"
+title: "متتالية فيبوناتشي"
 description: "استكشاف الخصائص الرياضية والتطبيقات الطبيعية لإحدى أشهر المتتاليات في الرياضيات"
 tag: تحليل
 author: Bachir
