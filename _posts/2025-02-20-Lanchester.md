@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "نموذج لانشستر للقتال (Lanchester Combat Model)"
+title: "نموذج لانشستر للقتال"
 description: "نموذج رياضي لوصف ديناميكيات الصراع بين قوتين متحاربتين باستخدام المعادلات التفاضلية"
 tag: تحليل
 author: Bachir
