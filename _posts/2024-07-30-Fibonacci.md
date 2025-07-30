@@ -19,7 +19,7 @@ author: Bachir
 
 $$
 \begin{cases}
-F_{n+2} = F_{n+1} + F_{n}, \quad  n \geq 0\\
+F_{n+2} = F_{n+1} + F_{n}, \quad  n \geq 0\\ \\
 F_0 = 0, \quad F_1 = 1
 \end{cases}
 $$
