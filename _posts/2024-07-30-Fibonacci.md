@@ -43,8 +43,8 @@ def F(n):
     phi = (1 + sqrt(5)) / 2
     Fn = (phi^(n+1) - (1 - phi)^(n+1)) / sqrt(5)
     return round(Fn)
-##نعطي قيمة n، مثلا 6
-print(F(6))  
+# مثال: نحسب F(6)
+print(F(6))  # الناتج يجب أن يكون 13
   </script>
 </div>
 
