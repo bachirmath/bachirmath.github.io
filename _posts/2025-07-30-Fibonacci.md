@@ -56,6 +56,17 @@ print(F(7))  # الناتج يجب أن يكون 13
   </script>
 </div>
 
+
+## الحلزون الذهبي
+بربط أقواس ربع دائرية في سلسلة من المربعات المبنية على متتالية فيبوناتشي، نحصل على الحلزون الذهبي، والذي يقارب الحلزون اللوغاريتمي.
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="/gifs/Spiral.gif" 
+       alt="Description of your GIF" 
+       style="max-width: 100%; height: auto; border-radius: 8px;">
+</div>
+
+
 ## التطبيقات في الطبيعة
 متتالية فيبوناتشي تظهر بشكل مدهش في الطبيعة:
 
