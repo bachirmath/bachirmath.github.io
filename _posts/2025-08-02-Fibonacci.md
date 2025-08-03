@@ -45,14 +45,16 @@ $$\boxed{F_n = \frac{\phi^{n} - (1-\phi)^{n}}{\sqrt{5}}}$$
 
 ### برنامج لحساب حدود المتتالية
 
+البرنامج التالي يحسب $F_m$، على سبيل المثال نحسب $F_m$ من أجل $m=7$، يمكن تغيير قيمة $m$
+
 <div class="sage">
   <script type="text/x-sage">
 def F(n):
     phi = (1 + sqrt(5)) / 2
     Fn = (phi^(n) - (1 - phi)^(n)) / sqrt(5)
     return round(Fn)
-# مثال: نحسب F(7)
-print(F(7))  # الناتج يجب أن يكون 13
+m=7 # يمكن تغيير هذه القيمة  
+print(F(m))  # الناتج يجب أن يكون 13
   </script>
 </div>
 
