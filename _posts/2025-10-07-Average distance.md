@@ -59,7 +59,7 @@ def monte_carlo_average_distance(n_simulations):
         distance = math.sqrt((x2-x1)**2 + (y2-y1)**2)
         total_distance += distance
     return total_distance / n_simulations
-print(monte_carlo_average_distance(1000))
+print(monte_carlo_average_distance(100000))
   </script>
 </div>
 
