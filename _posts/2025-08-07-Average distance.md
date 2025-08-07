@@ -43,24 +43,28 @@ $$
 ### محاكاة مونتي كارلو
 الطريقة الأكثر بساطة وفعالية لتقدير هذا المتوسط:
 
-```python
+
+
+<div class="sage">
+  <script type="text/x-sage">
 import random
 import math
-
 def monte_carlo_average_distance(n_simulations):
     total_distance = 0
     for _ in range(n_simulations):
         # Generate two random points
         x1, y1 = random.random(), random.random()
         x2, y2 = random.random(), random.random()
-        
         # Calculate distance
         distance = math.sqrt((x2-x1)**2 + (y2-y1)**2)
         total_distance += distance
-    
     return total_distance / n_simulations
 print(monte_carlo_average_distance(1000))
-```
+  </script>
+</div>
+
+<br>
+
 
 ### دقة التقدير
 مع زيادة عدد المحاكاة $n$، ينخفض الخطأ المعياري بمعدل $O(1/\sqrt{n})$ وفقاً لنظرية الحد المركزي (Central Limit Theorem).
